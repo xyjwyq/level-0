@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>右键菜单</title>
+    <style>
+        .container1 {
+            float: left;
+            width: 300px;
+            height: 300px;
+            background-color: aqua;
+        }
+
+        .container2 {
+            float: right;
+            width: 400px;
+            height: 400px;
+            background-color: blanchedalmond;
+        }
+
+        .context-menu {
+            position: fixed;
+            top: 200px;
+            left: 500px;
+            min-width: 200px;
+            padding: 20px;
+            line-height: 2;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            display: none;
+        }
+
+        .context-menu ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container1"></div>
+    <div class="container2"></div>
+    <div class="context-menu">
+        <ul>
+            <li>菜单1</li>
+            <li>菜单2</li>
+            <li>菜单3</li>
+            <li>菜单4</li>
+            <li>菜单5</li>
+            <li>菜单6</li>
+            <li>菜单7</li>
+            <li>菜单8</li>
+            <li>菜单9</li>
+            <li>菜单10</li>
+        </ul>
+    </div>
+
+    <script>
+        var container1 = document.querySelector('.container1'),
+            container2 = document.querySelector('.container2'),
+            contextMenu = document.querySelector('.context-menu');
+
+        container1.oncontextmenu = container2.oncontextmenu = function (e) {
+            e.preventDefault();
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = e.clientX + 'px';
+            contextMenu.style.top = e.clientY + 'px';
+        }
+
+        window.onmousedown = function () {
+            // 该事件在contextmenu事件之前执行
+            contextMenu.style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
