@@ -1,0 +1,88 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.banner {
+    position: relative;
+    width: 520px;
+    height: 280px;
+    margin: 0 auto;
+    overflow: hidden;
+    /* border: 2px solid #000;
+    box-sizing: border-box; */
+}
+
+.banner .images a {
+    float: left;
+}
+
+.banner .images img {
+    display: block;
+    width: 520px;
+    height: 280px;
+}
+
+.banner .dots {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    /* width: 60px; */
+    padding: 5px 10px;
+    margin: 0 auto;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, .3);
+
+}
+
+.banner .dots span {
+    float: left;
+    width: 8px;
+    height: 8px;
+    margin: 2px;
+    border-radius: 50%;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.banner .dots span.active {
+    background-color: #f40;
+}
+
+.banner .arrow {
+    display: none;
+}
+
+.banner:hover .arrow {
+    display: block;
+}
+
+.banner .direction {
+    position: absolute;
+    toP: 100px;
+    width: 20px;
+    height: 30px;
+    line-height: 30px;
+    background-color: rgba(0, 0, 0, .3);
+    color: #fff;
+    cursor: pointer;
+}
+
+.banner .direction:hover {
+    background-color: rgba(0, 0, 0, .5);
+}
+
+.banner .left {
+    left: 0;
+    border-radius: 0 17px 17px 0;
+}
+
+.banner .right {
+    right: 0;
+    padding-left: 7px;
+    box-sizing: border-box;
+    border-radius: 17px 0 0 17px;
+
+}

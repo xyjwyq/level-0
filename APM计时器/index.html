@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>APM计算器</title>
+    <style>
+        body {
+            text-align: center;
+        }
+
+        p {
+            font-size: 2em;
+        }
+
+        button {
+            font-size: 1em;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        倒计时: <span class="span-time">5</span>
+    </p>
+    <p>
+        点击数：<span class="span-num">0</span>
+    </p>
+    <p>
+        <button class="click">点击</button>
+        <button class="reset">重置</button>
+    </p>
+
+    <script>
+        var spanTime = document.querySelector('.span-time'),
+            spanNum = document.querySelector('.span-num'),
+            btnClick = document.querySelector('.click'),
+            btnReset = document.querySelector('.reset'),
+            restTime = 5,
+            num = 0,
+            timer = null,
+            isOver = false;
+
+        btnClick.onclick = function () {
+            if (num === 0) {
+                setTime();
+            }
+            if (!isOver) {
+                setNum(++num);
+            }
+        }
+
+        btnReset.onclick = function () {
+            setNum(0);
+            spanTime.innerHTML = 5;
+            isOver = false;
+            restTime = 5;
+        }
+
+        function setNum(n) {
+            num = n;
+            spanNum.innerHTML = num;
+        }
+
+        function setTime() {
+            // if (timer) return;
+            timer = setInterval(function () {
+                restTime--;
+                spanTime.innerHTML = restTime;
+                if (restTime === 0) {
+                    clearInterval(timer);
+                    // timer = null;
+                    isOver = true;
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>
