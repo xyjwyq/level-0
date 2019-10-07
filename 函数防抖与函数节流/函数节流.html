@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>函数节流</title>
+</head>
+
+<body>
+    <script src="../plugin/helper.js"></script>
+    <script>
+        // var handler = myPlugin.throttle(function (val) {
+        //     console.log('throttle' + val);
+        // }, 1000);
+        var handler = myPlugin.throttle(function (val) {
+            console.log('throttle' + val);
+        }, 1000, false);
+        window.onresize = function () {
+            handler(document.documentElement.clientWidth);
+        }
+    </script>
+</body>
+
+</html>
