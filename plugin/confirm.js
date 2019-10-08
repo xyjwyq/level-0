@@ -1,8 +1,8 @@
-if (!window.myPlugin) {
-    window.myPlugin = {};
+if (!this.myPlugin) {
+    this.myPlugin = {};
 }
 
-window.myPlugin.openConfirm = (function () {
+this.myPlugin.openConfirm = (function () {
 
     var divModal = null,
         divWrapper = null,

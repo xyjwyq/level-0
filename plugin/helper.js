@@ -1,7 +1,7 @@
-!window.myPlugin && (window.myPlugin = {});
+!this.myPlugin && (this.myPlugin = {});
 
 // 继承
-window.myPlugin.inherit = (function () {
+this.myPlugin.inherit = (function () {
     var F = function () { };
     return function (origin, target) {
         F.prototype = target.prototype;
@@ -12,7 +12,7 @@ window.myPlugin.inherit = (function () {
 })();
 
 // 对象混入
-window.myPlugin.mixin = function (obj1, obj2) {
+this.myPlugin.mixin = function (obj1, obj2) {
     return Object.assign({}, obj1, obj2);
 
     // var res = {};
@@ -28,7 +28,7 @@ window.myPlugin.mixin = function (obj1, obj2) {
 }
 
 // 对象克隆
-window.myPlugin.clone = function (target, deep) {
+this.myPlugin.clone = function (target, deep) {
     if (Array.isArray(target)) {
         if (deep) {
             var newArr = [];
@@ -55,7 +55,7 @@ window.myPlugin.clone = function (target, deep) {
 }
 
 // 函数防抖 —— 函数在动作结束后一段时间运行
-window.myPlugin.debounce = function (callback, time) {
+this.myPlugin.debounce = function (callback, time) {
     var timer = null;
     return function () {
         clearTimeout(timer);
@@ -67,7 +67,7 @@ window.myPlugin.debounce = function (callback, time) {
 }
 
 // 函数节流 ——— 一段时间内只运行一次
-window.myPlugin.throttle = function (callback, duration, immediately) {
+this.myPlugin.throttle = function (callback, duration, immediately) {
     // 方式1
     // var timer = null;
     // return function() {
@@ -127,4 +127,44 @@ window.myPlugin.throttle = function (callback, duration, immediately) {
 
     }
 
+}
+
+/**
+ * 科里化
+ * 在函数式编程中，科里化最重要的作用是把多参函数变为单参函数
+ */
+this, myPlugin.curry = function (func) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    var that = this;
+    return function () {
+        var curArgs = Array.from(arguments);
+        var totalArgs = args.concat(curArgs);
+        if (totalArgs.length < func.length) {
+            totalArgs.unshift(func);
+            return that.curry.apply(that, totalArgs);
+        } else {
+            return func.apply(null, totalArgs);
+        }
+    }
+}
+
+/**
+ * 函数管道
+ * 将多个单参函数组合起来，形成一个新的函数，这些函数中，前一个函数的输出，是后一个函数的输入
+ * 所传入的函数都必须是单参函数
+ */
+this.myPlugin.pipe = function () {
+    var args = Array.from(arguments);
+    return function (val) {
+        // 方式1
+        // for (var i = 0; i < args.length; i++) {
+        //     val = args[i](val)
+        // }
+        // return val;
+
+        // 方式2
+        return args.reduce(function (pre, cur) {
+            return cur(pre);
+        }, val);
+    }
 }
