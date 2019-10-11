@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>动画插件</title>
+    <style>
+        .item {
+            position: absolute;
+            top: 100px;
+            left: 100px;
+            width: 100px;
+            height: 100px;
+            background-color: aqua;
+            ;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        <button id="start">开始运动</button>
+        <button id="stop">结束运动</button>
+    </p>
+    <div class="item"></div>
+    <script src="../plugin/helper.js"></script>
+    <script src="../plugin/animate.js"></script>
+    <script>
+        var btnstart = document.querySelector('#start'),
+            btnStop = document.querySelector('#stop'),
+            oItem = document.querySelector('.item');
+        var animate = new myPlugin.Animate({
+            begin: {
+                top: 100,
+                left: 100,
+                width: 100,
+                height: 100
+            },
+            end: {
+                top: 320,
+                left: 270,
+                width: 200,
+                height: 220
+            },
+            onstart: function () {
+                console.log('开始');
+            },
+            onmove: function (curData) {
+                oItem.style.top = curData.top + 'px';
+                oItem.style.left = curData.left + 'px';
+                oItem.style.width = curData.width + 'px';
+                oItem.style.height = curData.height + 'px';
+            },
+            onend: function () {
+                console.log('结束');
+            }
+        });
+
+        btnstart.onclick = function () {
+            animate.start();
+        }
+
+        btnStop.onclick = function () {
+            animate.stop();
+        }
+
+    </script>
+</body>
+
+</html>
