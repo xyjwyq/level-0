@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>文字滚动效果</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 90%;
+            height: 50px;
+            padding: 10px;
+            margin: 0 auto;
+            background-color: aqua;
+            ;
+            box-sizing: border-box;
+        }
+
+        .clearfix::after {
+            content: '';
+            clear: both;
+            display: block;
+        }
+
+        .left {
+            float: left;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .right {
+            float: left;
+            height: 30px;
+            line-height: 30px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            margin-left: 30px;
+            overflow: hidden;
+        }
+
+        .right li {
+            height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper clearfix">
+        <div class="left">最新通知</div>
+        <ul class="right">
+            <li>1.Lorem ipsum dolor sit amet.</li>
+            <li>2.Atque dicta est aperiam a?</li>
+            <li>3.Quas accusantium quibusdam maxime quia?</li>
+            <li>4.Facilis minus quia praesentium suscipit?</li>
+            <li>5.Laborum voluptatum odio dolorum voluptate?</li>
+        </ul>
+    </div>
+    <script src="../plugin/helper.js"></script>
+    <script src="../plugin/animate.js"></script>
+    <script>
+        var oRight = document.querySelector('.right');
+        var height = 30;
+        // 由于元素的scrollTop属性不准确，因此需要不能依赖此属性进行滚动，需自己进行配置
+        var scrollDis = 0;
+
+
+        /**
+         * 为实现无缝滚动，需要将第一项li元素复制并添加到最后  
+        */
+        function initElement() {
+            var cloneDom = oRight.children[0].cloneNode(true);
+            oRight.appendChild(cloneDom);
+        }
+        initElement();
+
+        function startMove() {
+            setInterval(function () {
+                var animate = new myPlugin.Animate({
+                    begin: {
+                        scrollTop: scrollDis
+                    },
+                    end: {
+                        scrollTop: scrollDis + height
+                    },
+                    onmove: function (curData) {
+                        scrollDis = this.end.scrollTop;
+                        oRight.scrollTop = curData.scrollTop;
+                    },
+                    onend: function () {
+                        if (oRight.scrollHeight - height === scrollDis) {
+                            scrollDis = 0;
+                            oRight.scrollTop = 0;
+                        }
+
+                    }
+                });
+                animate.start();
+
+            }, 2000);
+        }
+
+        startMove();
+    </script>
+
+</body>
+
+</html>
