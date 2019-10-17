@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>像素鸟</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .game {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            margin: 0 auto;
+            border: 2px solid #000;
+            overflow: hidden;
+        }
+
+        .game .sky {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 200%;
+            height: 100%;
+            background-image: url('img/sky.png');
+        }
+
+        .game .land {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 200%;
+            height: 112px;
+            background: url('img/land.png');
+        }
+
+        .game .bird {
+            position: absolute;
+            left: 150px;
+            top: 150px;
+            width: 33px;
+            height: 26px;
+            background-image: url('img/bird.png');
+            background-position: -8px -10px;
+            ;
+        }
+
+        .game .pipe {
+            position: absolute;
+            width: 52px;
+        }
+
+        .game .pipe_top {
+            background-image: url('img/pipeDown.png');
+            ;
+            background-position: left bottom;
+        }
+
+        .game .pipe_bottom {
+            background-image: url('img/pipeUp.png');
+            background-position: left top;
+        }
+
+        .game .over {
+            position: absolute;
+            top: 0;
+            height: 0;
+            width: 800px;
+            height: 600px;
+            background-color: rgba(0, 0, 0, .3);
+            display: none;
+        }
+
+        .game .over .info {
+           position: absolute;
+           left: 0;
+           top: 0;
+           right: 0;
+           bottom: 0;
+           width: 100%;
+           height: 6em;
+           margin: auto;
+           text-align: center;
+           color: #fff;
+           font-size: 3em;
+           line-height: 3em;
+           font-weight: bold;
+        }
+
+        .game .over .info p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .score {
+            position: absolute;
+            top: 100px;
+            left: 0;
+            width: 200px;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="score">当前分数： <span>0</span></div>
+
+    <div class="game">
+        <div class="sky"></div>
+        <div class="land"></div>
+        <div class="bird"></div>
+        <div class="pipe_container"></div>
+        <div class="over">
+            <div class="info">
+                <p class="over_text">游戏结束</p>
+                <p class="over_score">当前分数：<span>0</span></p>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <script src="index.js"></script>
+</body>
+
+</html>
