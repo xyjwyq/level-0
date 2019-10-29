@@ -13,6 +13,28 @@ this.myPlugin.FormValidator = function (option) {
         errorClass: 'field-error' // 错误类名
     }
     this.option = Object.assign({}, defaultOption, option); // 形成最终配置
+
+    // 注册事件：得到所有字段容器 --> 找到需要的验证的dom --> 绑定事件
+    var elements = this.getAllElements();
+    var that = this;
+    for (var i = 0; i < elements.length; i++) {
+        var eleObj = elements[i];
+        var field = eleObj.field;
+
+        for (var j = 0; j < eleObj.doms.length; j++) {
+            var el = eleObj.doms[j];
+            var eventName = this.getEventName(el);
+            var triggerFields = this.getTriggerFields(el);
+            (function (field) {
+                var fields = [field].concat(triggerFields);
+                el.addEventListener(eventName, function () {
+                    that.setStatus.apply(that, fields);
+                });
+            })(field);
+
+        }
+    }
+
 }
 
 
@@ -68,6 +90,11 @@ myPlugin.FormValidator.prototype.getFieldContainer = function (fieldName) {
     return document.querySelector(`[${myPlugin.FormValidator.dataConfig.fieldContainer}=${fieldName}]`);
 }
 
+myPlugin.FormValidator.prototype.getAllFieldContainer = function () {
+    var containers = this.option.formDom.querySelectorAll(`[${myPlugin.FormValidator.dataConfig.fieldContainer}]`);
+    return Array.from(containers);
+}
+
 /**
  * 得到一个表单容器中，所有需要验证的表单元素
  */
@@ -77,11 +104,27 @@ myPlugin.FormValidator.prototype.getFieldElements = function (container) {
 }
 
 /**
+ * 得到所有字段，对应的要验证的dom元素
+ * 返回格式为 [{field:'loginId', doms:[...]}, ...]
+ */
+myPlugin.FormValidator.prototype.getAllElements = function () {
+    var containers = this.getAllFieldContainer();
+    var that = this;
+
+    return containers.map(function (container) {
+        return {
+            field: container.getAttribute(`${myPlugin.FormValidator.dataConfig.fieldContainer}`),
+            doms: that.getFieldElements(container)
+        };
+    });
+}
+
+/**
  * 得到整个表单的数据
  */
 myPlugin.FormValidator.prototype.getFormData = function () {
     var fieldContainer = myPlugin.FormValidator.dataConfig.fieldContainer;
-    var containers = this.option.formDom.querySelectorAll(`[${fieldContainer}]`);
+    var containers = this.getAllFieldContainer();
     var formData = {};
     Array.from(containers).forEach(container => {
         var fieldName = container.getAttribute(`${fieldContainer}`);
@@ -150,10 +193,99 @@ myPlugin.FormValidator.prototype.validateField = function (fieldName, formData) 
     return true;
 }
 
+/**
+ * 验证表单
+ * 无参，则验证真个表单
+ * 有参，则验证对应的字段
+ */
+myPlugin.FormValidator.prototype.validate = function () {
+    //  拿到所有字段，循环验证，返回信息
+    var formData = this.getFormData();
+    var that = this;
+    if (arguments.length === 0) {
+        var fields = Object.getOwnPropertyNames(formData);
+    } else {
+        var fields = Array.from(arguments);
+    }
+
+    return fields.map(function (field) {
+        return that.validateField(field, formData);
+    }).filter(function (res) {
+        return res !== true;
+    });
+}
+
+// 设置dom状态
+
+/**
+ * 设置每个字段的dom状态
+ */
+myPlugin.FormValidator.prototype.setFieldStatus = function (res, fieldName) {
+    // 得到容器，在容器上添加错误类名
+    // 得到显示错误信息的dom元素
+    var fieldContainer = this.getFieldContainer(fieldName);
+    // var fieldError = myPlugin.FormValidator.dataConfig.fieldError;
+    // var fieldDefaultError = myPlugin.FormValidator.dataConfig.fieldDefaultError;
+    var errorDom = fieldContainer.querySelector(`[${myPlugin.FormValidator.dataConfig.fieldError}]`);
+    if (!errorDom) {
+        errorDom = fieldContainer.querySelector(`${myPlugin.FormValidator.dataConfig.fieldDefaultError}`);
+    }
+
+    if (res) {
+        // 验证结果存在错误
+        if (errorDom) {
+            errorDom.innerHTML = res.message;
+        }
+        fieldContainer.classList.add(this.option.errorClass);
+    } else {
+        fieldContainer.classList.remove(this.option.errorClass);
+        if (errorDom) {
+            errorDom.innerHTML = '';
+        }
+    }
+
+}
+
+/**
+ * 设置整个表单的dom状态
+ * 无参，设置整个表单
+ * 有参，设置对应的字段
+ */
+myPlugin.FormValidator.prototype.setStatus = function () {
+
+    if (arguments.length === 0) {
+        var formData = this.getFormData();
+        var fields = Object.getOwnPropertyNames(formData);
+    } else {
+        var fields = Array.from(arguments);
+    }
+
+    var results = this.validate.apply(this, fields);
+    var that = this;
+    fields.forEach(function (field) {
+        var res = results.find(res => res.fieldName === field);
+        that.setFieldStatus(res, field)
+    });
+}
 
 
+// 注册事件
 
+myPlugin.FormValidator.prototype.getEventName = function (ele) {
+    var eventName = ele.getAttribute(`${myPlugin.FormValidator.dataConfig.fieldListener}`);
+    if (!eventName) {
+        eventName = myPlugin.FormValidator.dataConfig.fieldDefaultListener;
+    }
+    return eventName;
+}
 
+myPlugin.FormValidator.prototype.getTriggerFields = function (el) {
+    var triggers = el.getAttribute(`${myPlugin.FormValidator.dataConfig.fieldTrigger}`);
+    if (triggers) {
+        return triggers.split(',');
+    }
+    return [];
+}
 
 
 /**
@@ -182,6 +314,7 @@ myPlugin.FormValidator.validators = {
         if (Array.isArray(data) && data.length === 0) {
             return false;
         }
+        return true;
     },
     mail(data) {
         if (!data) {
